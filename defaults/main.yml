@@ -1,0 +1,59 @@
+kubeconfig_location: /etc/kubernetes/kubeconfig
+kube_local_storage_dir: /var/local/k8s-data/
+k3s_data_dir: /var/lib/k3s
+k3s_datastore_endpoint: sqlite
+# define this
+k3s_server_token: ~
+k3s_token_file: /etc/kubernetes/server-token
+
+k3s_distribution_url:
+  https://github.com/k3s-io/k3s/releases/download/v1.22.5%2Bk3s1/k3s
+k3s_checksum:
+  sha256:f18e0e17f11d3052f00ca4428bd548b6bf936bcfb71d8ad49a91154a6b5e460f
+
+kube_taint_apiserver_nodes: false
+
+kube_cluster_cidr: 172.19.0.0/16
+kube_service_cidr: 172.22.0.0/16
+kube_cluster_dns: 172.22.53.53
+kube_cluster_domain: cluster.local
+
+k3s_is_apiserver: false
+k3s_is_worker: false
+k3s_is_first_apiserver: false
+k3s_config_file: /etc/rancher/k3s/config.yaml
+
+k3s_disable_flannel: false
+k3s_disable_local_storage: false
+
+kube_node_advertise_host: '127.0.0.1'
+kube_node_ip: '127.0.0.1'
+kube_apiserver_port: 6443
+
+# extra names to add to certificate
+kube_extra_sans:
+  - '{{ ansible_fqdn }}'
+
+kubernetes_sysctls:
+  - #name: "Pass bridged IPv4 traffic to iptables (kube-router)"
+    key:
+    value: 1
+  - #name: "Arp flux with multiple interfaces"
+    key: net.ipv4.conf.default.arp_announce
+    value: 1
+  - #name: "Arp flux with multiple interfaces"
+    key: net.ipv4.conf.all.arp_announce
+    value: 1
+  - #name: "Arp flux with multiple interfaces"
+    key: net.ipv4.conf.default.arp_ignore
+    value: 2
+  - #name: "Arp flux with multiple interfaces"
+    key: net.ipv4.conf.all.arp_ignore
+    value: 2
+  - #name: "Enable rp-filter (kube-router)"
+    key: net.ipv4.conf.all.rp_filter
+    value: 1
+  - #name: "Enable rp-filter (kube-router)"
+    key: net.ipv4.conf.default.rp_filter
+    value: 1
+

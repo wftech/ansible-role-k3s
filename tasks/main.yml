@@ -1,0 +1,91 @@
+---
+- include: setup-Ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+
+- include: setup-Debian.yml
+  when: ansible_distribution == 'Debian'
+
+- name: Ensure base packages installed
+  package:
+    name: '{{ base_packages }}'
+
+- name: Ensure host is either apiserver or worker
+  assert:
+    that:
+       - k3s_is_apiserver or k3s_is_worker
+
+- name: Ensure host is not apiserver and worker at one time
+  assert:
+    that:
+      -  k3s_is_apiserver != k3s_is_worker
+
+- name: Ensure sysctls
+  sysctl:
+    name: '{{ item.key }}'
+    value: "{{ item.value }}"
+    sysctl_set: yes
+  loop: '{{ kubernetes_sysctls }}'
+  ignore_errors: yes
+
+- name: get the k3s
+  get_url:
+    url: '{{ k3s_distribution_url }}'
+    dest: /usr/bin/k3s
+    checksum: '{{ k3s_checksum }}'
+    mode: 0755
+
+- name: Create kubectl
+  file:
+    src: /usr/bin/k3s
+    dest: /usr/bin/kubectl
+    state: link
+
+- name: Create crictl
+  file:
+    src: /usr/bin/k3s
+    dest: /usr/bin/crictl
+    state: link
+
+- name: Create kubeconfig dir
+  file:
+    dest: '{{ kubeconfig_location | dirname }}'
+    state: directory
+
+- name: Ensure token file location
+  file:
+    dest: '{{ k3s_token_file | dirname }}'
+    state: directory
+
+- name: Ensure token file
+  copy:
+    content: '{{ k3s_server_token }}'
+    dest: '{{ k3s_token_file }}'
+    mode: 0600
+    backup: yes
+  when: k3s_server_token|default(False)
+
+- name: Ensure k3s config dir
+  file:
+    dest: '{{ k3s_config_file|dirname }}'
+    state: directory
+
+- name: Ensure k3s config
+  template:
+    src: k3s_config.yml
+    dest: '{{ k3s_config_file }}'
+    backup: yes
+
+- name: Ensure Host is either apiserver or worker
+  assert:
+    that:
+       - k3s_is_apiserver or k3s_is_worker
+
+- name: Setup apiserver
+  include_tasks: setup-apiserver.yml
+  when: k3s_is_apiserver|default(False)
+#
+- name: Setup agent
+  tags: worker
+  import_tasks: setup-agent.yml
+  when: k3s_is_worker|default(False)
+

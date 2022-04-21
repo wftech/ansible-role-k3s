@@ -1,0 +1,109 @@
+# {{ ansible_managed }}
+---
+{% if k3s_is_apiserver %}
+# Start as the very first host of cluster?
+cluster-init: {{ k3s_is_first_apiserver|default(False) }}
+{% endif %}
+
+# k3s_is_apiserver: '{{ k3s_is_apiserver }}'
+# k3s_is_worker: '{{ k3s_is_worker }}'
+# k3s_is_first_apiserver: '{{ k3s_is_first_apiserver }}'
+
+{% if k3s_is_worker or (k3s_is_apiserver and not k3s_is_first_apiserver) %}
+server: '{{ k3s_apiserver_server }}'
+{% endif %}
+
+
+{% if k3s_server_token|default(None) %}
+# Provide cluster token
+token-file: {{ k3s_token_file }}
+{% endif %}
+
+# Data dir location
+data-dir: {{ k3s_data_dir|to_json }}
+
+
+{% if k3s_is_apiserver %}
+# Provide extra TLS SANs in certificate
+tls-san:
+{% for tls_san in kube_extra_sans %}
+    - {{ tls_san }}
+{% else %}
+    - kubernetes.local
+{% endfor %}
+{% endif %}
+
+## Networking
+node-external-ip: {{ kube_node_advertise_host|to_json }}
+        # used only for connecting other nodes to apiserver one
+node-ip: {{ kube_node_ip|to_json }}
+kube-proxy-arg: "proxy-mode=ipvs"
+        # ensure ipvs proxy mode
+        # see https://github.com/rancher/k3s/issues/366
+
+## Inter-node networking
+{% if k3s_flannel_iface is defined %}
+flannel-iface:
+   - '{{ k3s_flannel_iface }}'
+{% endif %}
+
+{% if k3s_disable_flannel %}
+flannel-backend: none
+{% endif %}
+
+
+{% if k3s_is_apiserver %}
+# Master Datastore
+datastore-endpoint: {{ k3s_datastore_endpoint }}
+{% if k3s_datastore_endpoint == "etcd" %}
+etcd-expose-metrics: true
+etcd-snapshot-retention: 24
+etcd-snapshot-schedule-cron: '0 */2 * * *'
+{% endif %}
+{% endif %}
+
+{% if k3s_is_apiserver %}
+# Provide apiserver node config
+# this should be same in all the nodes
+cluster-cidr: {{ kube_cluster_cidr }}
+service-cidr: {{ kube_service_cidr }}
+cluster-dns: {{ kube_cluster_dns }}
+cluster-domain: {{ k3s_cluster_domain|to_json }}
+{% endif %}
+
+{% if k3s_is_apiserver and kube_taint_apiserver_nodes %}
+node-taint:
+  - "node-role.kubernetes.io/master=true:NoExecute"
+  - "node-role.kubernetes.io/master=true:NoSchedule"
+{% endif %}
+
+node-label:
+{% if k3s_is_apiserver %}
+  - "apiserver=true"
+{% else %}
+  - "worker=true"
+{% endif %}
+
+
+{% if k3s_is_apiserver %}
+write-kubeconfig: {{ kubeconfig_location|to_json }}
+write-kubeconfig-mode: "0600"
+{% endif %}
+
+{% if k3s_is_apiserver %}
+disable:
+  - traefik
+  - servicelb
+  - cloud-controller
+{% if k3s_disable_local_storage %}
+  - local-storage
+{% endif %}
+
+{% if k3s_disable_flannel %}
+  - network-policy
+{% endif %}
+{% endif %}
+
+{% if k3s_is_apiserver %}
+default-local-storage-path: {{ kube_local_storage_dir }}
+{% endif %}

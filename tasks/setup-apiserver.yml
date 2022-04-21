@@ -1,0 +1,35 @@
+- name: Prepare K3S apiserver config
+  template:
+    src: k3s-apiserver.service.j2
+    dest: /etc/systemd/system/k3s-apiserver.service
+
+- name: Ensure k3s apiserver service
+  service:
+    name: k3s-apiserver
+    state: started
+    enabled: yes
+
+- name: Wait for kubeapiserver
+  wait_for:
+    port: 6443
+    state: present
+    timeout: 180
+
+- name: Wait for kubeapiserver
+  wait_for:
+    path: '{{ kubeconfig_location }}'
+    state: present
+    timeout: 180
+
+- name: Prepare kubeconfig dir
+  file:
+    path: ~/.kube
+    state: directory
+    mode: 0700
+
+- name: Provide root with kubeconfig
+  copy:
+    remote_src: yes
+    src: '{{ kubeconfig_location }}'
+    dest: ~/.kube/config
+    backup: yes

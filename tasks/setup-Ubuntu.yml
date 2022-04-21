@@ -1,0 +1,19 @@
+---
+- name: Apt Update
+  apt:
+    update_cache: yes
+
+- name: Ensure k3s prerequisites (Ubuntu)
+  apt:
+    name: '{{ ubuntu_packages }}'
+    state: present
+    cache_valid_time: 3600
+
+- name: "Ensure arptables-legacy once more"
+  alternatives:
+    name: "{{ item }}"
+    path: "/usr/sbin/{{ item }}-legacy"
+  loop:
+    - "iptables"
+    - "ebtables"
+  ignore_errors: yes

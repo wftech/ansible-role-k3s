@@ -1,0 +1,16 @@
+---
+base_packages:
+  - ebtables
+  - ethtool
+  - socat
+  - conntrack
+  - iptables
+  - jq
+  - tmux
+  - curl
+
+ubuntu_packages:
+  - iptables
+
+debian_packages:
+  - arptables
