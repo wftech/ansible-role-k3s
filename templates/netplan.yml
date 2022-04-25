@@ -1,0 +1,7 @@
+network:
+    version: 2
+    bridges:
+        br0:
+            dhcp4: no
+            interfaces: []
+            addresses: [ {{ kube_interface_address }}/28 ]

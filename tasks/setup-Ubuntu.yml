@@ -17,3 +17,21 @@
     - "iptables"
     - "ebtables"
   ignore_errors: yes
+
+- name: Neplan config
+  template:
+    src: netplan.yml
+    dest: /etc/netplan/bridge.yml
+
+- name: Netpla apply
+  command: netplan apply
+
+- name: Collect ansible_all_ipv4_addresses and ansible_interfaces facts
+  setup:
+    filter:
+      - 'ansible_all_ipv4_addresses'
+      - 'ansible_interfaces'
+
+- fail:
+    msg: "Bridge 'br0' is not in 'ansible_interfaces' or in 'ansible_all_ipv4_addresses'"
+  when: "'br0' not in ansible_interfaces and kube_interface_address in ansible_all_ipv4_addresses"
