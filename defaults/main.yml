@@ -1,6 +1,6 @@
 kubeconfig_location: /etc/kubernetes/kubeconfig
 kube_local_storage_dir: /var/local/k8s-data/
-k3s_data_dir: /var/lib/k3s
+k3s_data_dir: /var/lib/rancher/k3s
 k3s_datastore_endpoint: sqlite
 # define this
 k3s_server_token: ~
