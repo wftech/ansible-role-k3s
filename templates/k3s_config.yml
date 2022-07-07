@@ -73,9 +73,10 @@ cluster-domain: {{ k3s_cluster_domain|to_json }}
 
 {% if k3s_is_apiserver and kube_taint_apiserver_nodes %}
 node-taint:
-  - "node-role.kubernetes.io/master=true:NoExecute"
   - "node-role.kubernetes.io/master=true:NoSchedule"
 {% endif %}
+
+node-name: {{ k3s_node_name|to_json }}
 
 node-label:
 {% if k3s_is_apiserver %}

@@ -34,6 +34,8 @@ kube_apiserver_port: 6443
 kube_extra_sans:
   - '{{ ansible_fqdn }}'
 
+k3s_node_name: '{{ ansible_fqdn }}'
+
 kubernetes_sysctls:
   - #name: "Pass bridged IPv4 traffic to iptables (kube-router)"
     key:
