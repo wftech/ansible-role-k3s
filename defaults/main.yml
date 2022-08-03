@@ -7,9 +7,9 @@ k3s_server_token: ~
 k3s_token_file: /etc/kubernetes/server-token
 
 k3s_distribution_url:
-  https://github.com/k3s-io/k3s/releases/download/v1.22.5%2Bk3s1/k3s
+  https://github.com/k3s-io/k3s/releases/download/v1.24.3%2Bk3s1/k3s
 k3s_checksum:
-  sha256:f18e0e17f11d3052f00ca4428bd548b6bf936bcfb71d8ad49a91154a6b5e460f
+  sha256:99dde3fab7201e4b9aefc1a14ca97710c06d8cbcb6f127e14570086f2259616c
 
 kube_taint_apiserver_nodes: false
 
