@@ -23,12 +23,13 @@ k3s_is_worker: false
 k3s_is_first_apiserver: false
 k3s_config_file: /etc/rancher/k3s/config.yaml
 
+k3s_apiserver_server: https://127.0.0.1:6443/
+
 k3s_disable_flannel: false
 k3s_disable_local_storage: false
 
 kube_node_advertise_host: '127.0.0.1'
 kube_node_ip: '127.0.0.1'
-kube_apiserver_port: 6443
 
 # extra names to add to certificate
 kube_extra_sans:
