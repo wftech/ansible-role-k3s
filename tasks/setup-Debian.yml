@@ -3,7 +3,7 @@
   apt:
     update_cache: yes
 
-- name: Ensure k3s prerequisites (Ubuntu)
+- name: Ensure k3s prerequisites (Debian)
   apt:
     name: '{{ debian_packages }}'
     state: present
