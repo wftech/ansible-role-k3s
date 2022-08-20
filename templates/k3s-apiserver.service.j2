@@ -25,5 +25,6 @@ RestartSec=5s
 ExecStartPre=-/sbin/modprobe br_netfilter
 ExecStartPre=-/sbin/modprobe overlay
 ExecStart=/usr/bin/k3s server \
-    --config {{ k3s_config_file }}
+    --config {{ k3s_config_file }} \
+    --node-label worker=true
 

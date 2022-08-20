@@ -1,10 +1,22 @@
+
+k3s_is_apiserver: false
+k3s_is_worker: false
+k3s_is_first_apiserver: false
+
+k3s_config_file: /etc/rancher/k3s/config.yaml
+
 kubeconfig_location: /etc/kubernetes/kubeconfig
+
 kube_local_storage_dir: /var/local/k8s-data/
+
 k3s_data_dir: /var/lib/rancher/k3s
+
 k3s_datastore_endpoint: sqlite
+
 # define this
-k3s_server_token: ~
-k3s_token_file: /etc/kubernetes/server-token
+k3s_agent_token: ~
+k3s_agent_token_file: /etc/kubernetes/agent-token
+
 
 k3s_distribution_url:
   https://github.com/k3s-io/k3s/releases/download/v1.24.3%2Bk3s1/k3s
@@ -18,17 +30,12 @@ kube_service_cidr: 172.22.0.0/16
 kube_cluster_dns: 172.22.53.53
 kube_cluster_domain: cluster.local
 
-k3s_is_apiserver: false
-k3s_is_worker: false
-k3s_is_first_apiserver: false
-k3s_config_file: /etc/rancher/k3s/config.yaml
-
 k3s_apiserver_server: https://127.0.0.1:6443/
 
 k3s_disable_flannel: false
 k3s_disable_local_storage: false
 
-kube_node_advertise_host: '127.0.0.1'
+kube_node_external_ip: '127.0.0.1'
 kube_node_ip: '127.0.0.1'
 
 # extra names to add to certificate
@@ -38,7 +45,7 @@ kube_extra_sans:
 k3s_node_name: '{{ ansible_fqdn }}'
 
 kubernetes_sysctls:
-  - #name: "Pass bridged IPv4 traffic to iptables (kube-router)"
+  - #name: "Pass bridged IPv4 traffic to iptables"
     key:
     value: 1
   - #name: "Arp flux with multiple interfaces"

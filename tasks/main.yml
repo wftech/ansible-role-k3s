@@ -51,18 +51,19 @@
     dest: '{{ kubeconfig_location | dirname }}'
     state: directory
 
-- name: Ensure token file location
+- name: Ensure agent token file location
   file:
-    dest: '{{ k3s_token_file | dirname }}'
+    dest: '{{ k3s_agent_token_file | dirname }}'
     state: directory
+  when: k3s_agent_token_file|default(False)
 
-- name: Ensure token file
+- name: Ensure agent token file
   copy:
-    content: '{{ k3s_server_token }}'
-    dest: '{{ k3s_token_file }}'
+    content: '{{ k3s_agent_token }}'
+    dest: '{{ k3s_agent_token_file }}'
     mode: 0600
     backup: yes
-  when: k3s_server_token|default(False)
+  when: k3s_agent_token_file|default(False)
 
 - name: Ensure k3s config dir
   file:

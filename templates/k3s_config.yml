@@ -1,5 +1,6 @@
 # {{ ansible_managed }}
 ---
+
 {% if k3s_is_apiserver %}
 # Start as the very first host of cluster?
 cluster-init: {{ k3s_is_first_apiserver|default(False) }}
@@ -13,15 +14,17 @@ cluster-init: {{ k3s_is_first_apiserver|default(False) }}
 server: '{{ k3s_apiserver_server }}'
 {% endif %}
 
-
-{% if k3s_server_token|default(None) %}
-# Provide cluster token
-token-file: {{ k3s_token_file }}
+{% if k3s_agent_token|default(None) %}
+{% if k3s_is_apiserver %}
+agent-token-file: "{{ k3s_agent_token_file }}"
+{% else %}
+# as we are on the worker node, we provide agent token here.
+token-file: "{{ k3s_agent_token_file }}"
+{% endif %}
 {% endif %}
 
 # Data dir location
 data-dir: {{ k3s_data_dir|to_json }}
-
 
 {% if k3s_is_apiserver %}
 # Provide extra TLS SANs in certificate
@@ -34,7 +37,7 @@ tls-san:
 {% endif %}
 
 ## Networking
-node-external-ip: {{ kube_node_advertise_host|to_json }}
+node-external-ip: {{ kube_node_external_ip |to_json }}
         # used only for connecting other nodes to apiserver one
 node-ip: {{ kube_node_ip|to_json }}
 kube-proxy-arg: "proxy-mode=ipvs"
