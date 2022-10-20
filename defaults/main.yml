@@ -46,7 +46,7 @@ k3s_node_name: '{{ ansible_fqdn }}'
 
 kubernetes_sysctls:
   - #name: "Pass bridged IPv4 traffic to iptables"
-    key:
+    key: net.bridge.bridge_nf_call_iptables
     value: 1
   - #name: "Arp flux with multiple interfaces"
     key: net.ipv4.conf.default.arp_announce
