@@ -71,7 +71,7 @@ etcd-snapshot-schedule-cron: '0 */2 * * *'
 cluster-cidr: {{ kube_cluster_cidr }}
 service-cidr: {{ kube_service_cidr }}
 cluster-dns: {{ kube_cluster_dns }}
-cluster-domain: {{ k3s_cluster_domain|to_json }}
+cluster-domain: {{ kube_cluster_domain|to_json }}
 {% endif %}
 
 {% if k3s_is_apiserver and kube_taint_apiserver_nodes %}
