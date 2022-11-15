@@ -46,6 +46,12 @@
     dest: /usr/bin/crictl
     state: link
 
+- name: Create ctr
+  file:
+     src: /usr/bin/k3s
+     dest: /usr/bin/ctr
+     state: link
+
 - name: Create kubeconfig dir
   file:
     dest: '{{ kubeconfig_location | dirname }}'
