@@ -23,6 +23,13 @@ token-file: "{{ k3s_agent_token_file }}"
 {% endif %}
 {% endif %}
 
+{% if k3s_cluster_token|default(None) %}
+{% if k3s_is_apiserver %}
+token-file: "{{ k3s_cluster_token_file }}"
+{% endif %}
+{% endif %}
+
+
 # Data dir location
 data-dir: {{ k3s_data_dir|to_json }}
 
