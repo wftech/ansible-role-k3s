@@ -39,18 +39,21 @@
     src: /usr/bin/k3s
     dest: /usr/bin/kubectl
     state: link
+  when: k3s_link_kubectl
 
 - name: Create crictl
   file:
     src: /usr/bin/k3s
     dest: /usr/bin/crictl
     state: link
+  when: k3s_link_crictl
 
 - name: Create ctr
   file:
      src: /usr/bin/k3s
      dest: /usr/bin/ctr
      state: link
+  when: k3s_link_ctr
 
 - name: Create kubeconfig dir
   file:
