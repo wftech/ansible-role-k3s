@@ -37,6 +37,7 @@ kube_cluster_domain: cluster.local
 k3s_apiserver_server: https://127.0.0.1:6443/
 
 k3s_disable_flannel: false
+k3s_disable_kubeproxy: false
 k3s_disable_local_storage: false
 
 kube_node_external_ip: '127.0.0.1'

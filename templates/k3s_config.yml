@@ -113,6 +113,9 @@ disable:
 {% if k3s_disable_flannel %}
   - network-policy
 {% endif %}
+{% if k3s_disable_kubeproxy %}
+  - kube-proxy
+{% endif %}
 {% endif %}
 
 {% if k3s_is_apiserver %}
