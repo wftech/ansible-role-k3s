@@ -103,9 +103,15 @@ write-kubeconfig-mode: "0600"
 
 {% if k3s_is_apiserver %}
 disable:
+{% if k3s_disable_traefik %}
   - traefik
+{% endif %}
+{% if k3s_disable_servicelb %}
   - servicelb
+{% endif %}
+{% if k3s_disable_cloudcontroller %}
   - cloud-controller
+{% endif %}
 {% if k3s_disable_local_storage %}
   - local-storage
 {% endif %}
