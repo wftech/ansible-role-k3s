@@ -1,8 +1,8 @@
 ---
-- include: setup-Ubuntu.yml
+- include_tasks: setup-Ubuntu.yml
   when: ansible_distribution == 'Ubuntu'
 
-- include: setup-Debian.yml
+- include_tasks: setup-Debian.yml
   when: ansible_distribution == 'Debian'
 
 - name: Ensure base packages installed
